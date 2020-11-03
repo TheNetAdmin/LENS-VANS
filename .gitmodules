@@ -1,3 +1,6 @@
 [submodule "lens"]
 	path = lens
 	url = git@github.com:TheNetAdmin/LENS.git
+[submodule "vans"]
+	path = vans
+	url = git@github.com:TheNetAdmin/VANS.git
