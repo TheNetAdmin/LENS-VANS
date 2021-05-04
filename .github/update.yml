@@ -1,0 +1,38 @@
+name: Update Submodule
+
+on:
+  schedule:
+    - cron: 0 0 * * *
+  push:
+    branches: [ master ]
+
+jobs:
+  update_submodule:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: webfactory/ssh-agent@v0.4.1
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+
+      - name: Init submodule
+        run: git submodule init
+
+      - name: Update submodule
+        run: git submodule update --recursive
+      
+      - name: Pull submodule
+        run: |
+          cd lens && git pull origin master && cd .. &&
+          cd vans && git pull origin master && cd ..
+        
+      - name: Update root repo
+        run: |
+          git config user.email "zxwang42@gmail.com" &&
+          git config user.name "Zixuan Wang" &&
+          if [[ -n $(git status -s) ]]; then
+            git commit -am "Update LENS and VANS"
+            git push origin master
+          fi
